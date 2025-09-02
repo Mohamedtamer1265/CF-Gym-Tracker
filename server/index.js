@@ -13,7 +13,7 @@ app.use(express.json());
 
 refreshGymsNow().catch(() => console.log("Startup fetch failed"));
 // Routes
-app.use("/api/gyms", gymsRouter);
+app.use("/gyms", gymsRouter);
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
