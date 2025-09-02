@@ -6,7 +6,7 @@ import gymsRouter from "./routes/gyms.js";
 
 dotenv.config();
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = 8080 || process.env.PORT;
 
 app.use(cors());
 app.use(express.json());

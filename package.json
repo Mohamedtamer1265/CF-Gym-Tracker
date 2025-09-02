@@ -7,6 +7,9 @@
     "start": "node server/index.js",
     "dev": "nodemon server/index.js"
   },
+  "engines": {
+    "node": "20.19.4"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
