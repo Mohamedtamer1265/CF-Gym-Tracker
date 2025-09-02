@@ -9,10 +9,10 @@
   </head>
   <body class="bg-gray-900 text-gray-100 min-h-screen p-6">
     <div class="max-w-6xl mx-auto">
-      <h1 class="text-3xl font-bold mb-6 text-center">Codeforces Gyms</h1>
+      <h1 class="text-3xl font-bold mb-6 text-center">CF Gym Tracker</h1>
 
       <!-- Controls -->
-      <div class="mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div class="mb-6 grid grid-cols-1 md:grid-cols-5 gap-4">
         <!-- Handles -->
         <input
           id="handles"
@@ -45,12 +45,20 @@
           <option value="unsolved">Unsolved</option>
         </select>
 
-        <!-- Button -->
+        <!-- Get Gyms -->
         <button
           id="getGymsBtn"
           class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded font-semibold"
         >
           Get Gyms
+        </button>
+
+        <!-- Random Gym -->
+        <button
+          id="randomGymBtn"
+          class="bg-purple-600 hover:bg-purple-500 px-4 py-2 rounded font-semibold"
+        >
+          🎲 Random Gym
         </button>
       </div>
 

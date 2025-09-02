@@ -76,6 +76,22 @@ function renderGyms(gyms) {
   });
 }
 
+const randomGymBtn = document.getElementById("randomGymBtn");
+
+// Random Gym button event
+randomGymBtn.addEventListener("click", () => {
+  if (allGyms.length === 0) {
+    return showWarning("No gyms available. Fetch gyms first!");
+  }
+
+  const randomIndex = Math.floor(Math.random() * allGyms.length);
+  const randomGym = allGyms[randomIndex];
+
+  renderGyms([randomGym]);
+
+  pageInfo.textContent = `🎲 Random Gym (from ${allGyms.length})`;
+});
+
 // Pagination
 function showPage(page) {
   const start = (page - 1) * gymsPerPage;
