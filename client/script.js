@@ -146,7 +146,6 @@ async function fetchGyms() {
           ? API_BASE
           : `${API_BASE}${query}`;
     }
-    console.log(endpoint);
 
     const res = await fetch(endpoint);
     if (!res.ok) throw new Error("Bad response from server");
@@ -158,7 +157,7 @@ async function fetchGyms() {
     showPage(currentPage);
   } catch (err) {
     console.error(err);
-    showWarning("Failed to fetch gyms from the backend.");
+    showWarning("check the handles again");
   } finally {
     loading.classList.add("hidden");
   }
@@ -190,7 +189,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     currentPage = 1;
     showPage(currentPage);
   } catch (err) {
-    console.error("Failed to load gyms:", err);
+    console.error("Failed to load gyms && Check the errors again :", err);
   }
 });
 

@@ -43,7 +43,7 @@ export const getUserVirtualGyms = async (req, res) => {
     for (const sub of submissions) {
       if (sub.contestId < 100000 || sub.verdict !== "OK") continue;
       const contest = getGymById(sub.contestId);
-      if (!contest && contest.phase != "FINISHED") continue;
+      if (!contest || (contest.phase != "FINISHED")) continue;
       if (Number(difficulty) != 0)
         if (Number(contest.difficulty) !== Number(difficulty)) continue;
       const queryHandles = new Set(handles);
