@@ -198,14 +198,22 @@ nextPageBtn.addEventListener("click", () => {
 
 window.addEventListener("DOMContentLoaded", async () => {
   try {
+    // Show loading spinner immediately
+    loading.classList.remove("hidden");
+
     const res = await fetch(API_BASE);
     if (!res.ok) throw new Error("Failed to fetch gyms");
+
     const data = await res.json();
     allGyms = Object.values(data);
     currentPage = 1;
     showPage(currentPage);
   } catch (err) {
     console.error("Failed to load gyms && Check the errors again :", err);
+    showWarning("Failed to load gyms on page load.");
+  } finally {
+    // Hide loading spinner once done
+    loading.classList.add("hidden");
   }
 });
 
