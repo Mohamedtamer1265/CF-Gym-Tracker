@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gyms Viewer</title>
+    <script defer src="script.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-900 text-gray-100 min-h-screen p-6">
+    <div class="max-w-6xl mx-auto">
+      <h1 class="text-3xl font-bold mb-6 text-center">Codeforces Gyms</h1>
+
+      <!-- Controls -->
+      <div class="mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+        <!-- Handles -->
+        <input
+          id="handles"
+          type="text"
+          placeholder="Enter handles (comma separated)"
+          class="p-2 rounded bg-gray-800 border border-gray-700"
+        />
+
+        <!-- Difficulty -->
+        <select
+          id="difficulty"
+          class="p-2 rounded bg-gray-800 border border-gray-700 text-white"
+        >
+          <option value="" disabled selected hidden>Select Difficulty</option>
+          <option value="all">All</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+
+        <!-- Mode -->
+        <select
+          id="mode"
+          class="p-2 rounded bg-gray-800 border border-gray-700"
+        >
+          <option value="" disabled selected hidden>Select Mode</option>
+          <option value="all">All Gyms</option>
+          <option value="team">Solved By Team</option>
+          <option value="unsolved">Unsolved</option>
+        </select>
+
+        <!-- Button -->
+        <button
+          id="getGymsBtn"
+          class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded font-semibold"
+        >
+          Get Gyms
+        </button>
+      </div>
+
+      <div
+        id="warningBox"
+        class="hidden bg-red-600 text-white p-2 rounded mb-2"
+      ></div>
+
+      <!-- Loading -->
+      <div
+        id="loading"
+        class="hidden flex flex-col items-center justify-center gap-2 mb-6"
+      >
+        <!-- Spinner -->
+        <div
+          class="w-12 h-12 border-4 border-yellow-400 border-dashed rounded-full animate-spin"
+        ></div>
+
+        <!-- Animated text -->
+        <p class="text-yellow-400 font-semibold text-lg animate-pulse">
+          Loading gyms...
+        </p>
+      </div>
+
+      <!-- Table -->
+      <div class="overflow-x-auto">
+        <table id="gymsTable" class="table-auto w-full border-collapse">
+          <thead>
+            <tr>
+              <th class="px-4 py-2 text-left text-gray-300">Contest</th>
+              <th class="px-4 py-2 text-left text-gray-300">Team</th>
+              <th class="px-4 py-2 text-left text-gray-300">Difficulty</th>
+              <th class="px-4 py-2 text-left text-gray-300">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Filled dynamically by script.js -->
+          </tbody>
+        </table>
+      </div>
+      <!-- Pagination -->
+      <div class="flex justify-between items-center mt-4">
+        <button
+          id="prevPage"
+          class="px-4 py-2 bg-gray-700 rounded disabled:opacity-50"
+        >
+          Prev
+        </button>
+        <span id="pageInfo" class="text-gray-300">Page 1</span>
+        <button
+          id="nextPage"
+          class="px-4 py-2 bg-gray-700 rounded disabled:opacity-50"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  </body>
+</html>
