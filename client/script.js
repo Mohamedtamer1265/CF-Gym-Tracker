@@ -9,7 +9,7 @@ let allGyms = [];
 let currentPage = 1;
 const gymsPerPage = 100;
 
-const API_BASE = "http://localhost:5000/api/gyms";
+const API_BASE = "https://cf-gym-tracker.vercel.app/api/gyms";
 
 function renderGyms(gyms) {
   const tbody = document.querySelector("#gymsTable tbody");
