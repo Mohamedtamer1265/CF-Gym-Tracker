@@ -147,7 +147,7 @@ async function fetchGyms() {
 
     // Difficulty next
     if (difficulty !== "") {
-      const diffValue = difficulty.toLowerCase() === "all" ? 0 : difficulty;
+      const diffValue = difficulty === "all" ? 0 : difficulty;
       query += `${query ? "&" : "?"}difficulty=${encodeURIComponent(
         diffValue
       )}`;
@@ -158,7 +158,7 @@ async function fetchGyms() {
     else if (mode === "unsolved") endpoint = `${API_BASE}/unsolved${query}`;
     else if (mode === "all") {
       endpoint =
-        difficulty === "" || difficulty == "0"
+        (difficulty === "" || difficulty == "all")
           ? API_BASE
           : `${API_BASE}${query}`;
     }
