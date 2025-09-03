@@ -27,7 +27,7 @@ export const getGyms = async (req, res) => {
   }
 };
 
-export const getUserVirtualGyms = async (req, res) => {
+export const getUserVirtualGyms = async (req, res) => { /// max usersubmissions maybe 8k
   try {
     let { handles, difficulty } = req.query;
 

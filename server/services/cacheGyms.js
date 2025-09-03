@@ -17,7 +17,6 @@ function arrayToMap(gymsArray) {
   return map;
 }
 
-
 export function getMapCachedGyms() {
   return gymsCache;
 }
@@ -30,7 +29,6 @@ function mapToObject(map) {
   return Object.fromEntries(map);
 }
 
-
 export function getGymById(gymId) {
   return gymsCache.get(String(gymId));
 }
@@ -38,8 +36,6 @@ export function getGymById(gymId) {
 export function getGyms() {
   return mapToObject(gymsCache);
 }
-
-
 
 export async function refreshGymsNow() {
   try {
@@ -50,13 +46,13 @@ export async function refreshGymsNow() {
         try {
           const data = JSON.parse(raw);
           const isFresh = Date.now() - data.timestamp < CACHE_TTL;
-
-          if (isFresh && data.gyms) {
-            gymsCache = objectToMap(data.gyms);
-            return { timestamp: data.timestamp, gyms: data.gyms };
-          }
+          // assume it is always fresh
+          gymsCache = objectToMap(data.gyms);
+          return { timestamp: data.timestamp, gyms: data.gyms };
         } catch (parseErr) {
-          console.warn("Warning: gyms.json is corrupted, fetching fresh data...");
+          console.warn(
+            "Warning: gyms.json is corrupted, fetching fresh data..."
+          );
         }
       }
     }
@@ -65,7 +61,7 @@ export async function refreshGymsNow() {
     const gymsArray = await fetchGyms();
     gymsCache = arrayToMap(gymsArray);
 
-    // Save to file
+    
     const gymsObj = mapToObject(gymsCache);
     const dataToSave = {
       timestamp: Date.now(),
@@ -76,7 +72,6 @@ export async function refreshGymsNow() {
 
     console.log(`Gyms cache updated with ${gymsCache.size} gyms`);
     return dataToSave;
-
   } catch (err) {
     console.error("Failed to refresh gyms:", err);
     return { timestamp: Date.now(), gyms: {}, count: 0 };
