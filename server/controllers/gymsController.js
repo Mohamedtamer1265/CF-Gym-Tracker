@@ -26,7 +26,7 @@ export const getGyms = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
+const solo = "practice";
 export const getUserVirtualGyms = async (req, res) => {
   /// max usersubmissions maybe 8k
   try {
@@ -58,9 +58,8 @@ export const getUserVirtualGyms = async (req, res) => {
       );
       if (!allMembersMatch) continue;
 
-      const teamId = sub.author?.teamId ?? `__UPSOLVED__`;
-      const teamName = sub.author?.teamName || "__UPSOLVED__";
-      console.log(teamName);
+      const teamId = sub.author?.teamId ?? solo;
+      const teamName = sub.author?.teamName || solo;
       if (!userGyms[sub.contestId]) {
         userGyms[sub.contestId] = {
           contestId: sub.contestId,
@@ -73,8 +72,8 @@ export const getUserVirtualGyms = async (req, res) => {
       } else {
         // teamName prefer
         if (
-          userGyms[sub.contestId].teamName == "__UPSOLVED__" &&
-          teamName != "__UPSOLVED__"
+          userGyms[sub.contestId].teamName == solo &&
+          teamName != solo
         ) {
           userGyms[sub.contestId].teamName = teamName;
         }
