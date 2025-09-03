@@ -27,7 +27,8 @@ export const getGyms = async (req, res) => {
   }
 };
 
-export const getUserVirtualGyms = async (req, res) => { /// max usersubmissions maybe 8k
+export const getUserVirtualGyms = async (req, res) => {
+  /// max usersubmissions maybe 8k
   try {
     let { handles, difficulty } = req.query;
 
@@ -43,7 +44,7 @@ export const getUserVirtualGyms = async (req, res) => { /// max usersubmissions 
     for (const sub of submissions) {
       if (sub.contestId < 100000 || sub.verdict !== "OK") continue;
       const contest = getGymById(sub.contestId);
-      if (!contest || (contest.phase != "FINISHED")) continue;
+      if (!contest || contest.phase != "FINISHED") continue;
       if (Number(difficulty) != 0)
         if (Number(contest.difficulty) !== Number(difficulty)) continue;
       const queryHandles = new Set(handles);
@@ -59,7 +60,7 @@ export const getUserVirtualGyms = async (req, res) => { /// max usersubmissions 
 
       const teamId = sub.author?.teamId ?? `__UPSOLVED__`;
       const teamName = sub.author?.teamName || "__UPSOLVED__";
-
+      console.log(teamName);
       if (!userGyms[sub.contestId]) {
         userGyms[sub.contestId] = {
           contestId: sub.contestId,
@@ -69,6 +70,14 @@ export const getUserVirtualGyms = async (req, res) => { /// max usersubmissions 
           difficulty: contest.difficulty ?? difficulty,
           teams: {},
         };
+      } else {
+        // teamName prefer
+        if (
+          userGyms[sub.contestId].teamName == "__UPSOLVED__" &&
+          teamName != "__UPSOLVED__"
+        ) {
+          userGyms[sub.contestId].teamName = teamName;
+        }
       }
 
       if (!userGyms[sub.contestId].teams[teamId]) {
