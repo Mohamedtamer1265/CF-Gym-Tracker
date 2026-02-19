@@ -167,7 +167,7 @@ async function fetchGyms() {
     if (!res.ok) throw new Error("Bad response from server");
 
     const gymsObj = await res.json();
-    allGyms = Object.values(gymsObj);
+    allGyms = Object.values(gymsObj).reverse(); // Reverse to show newest first
 
     currentPage = 1;
     showPage(currentPage);
