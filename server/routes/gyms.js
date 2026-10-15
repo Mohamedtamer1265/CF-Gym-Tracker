@@ -1,5 +1,9 @@
 import express from "express";
-import { getGyms, getUserVirtualGyms,unsolvedGyms } from "../controllers/gymsController.js";
+import {
+  getGyms,
+  getUserVirtualGyms,
+  unsolvedGyms,
+} from "../controllers/gymsController.js";
 
 const router = express.Router();
 // /api/gyms/:handle

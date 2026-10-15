@@ -41,6 +41,14 @@
     <div class="max-w-6xl mx-auto">
       <!-- Controls -->
       <div class="mb-6 grid grid-cols-1 md:grid-cols-5 gap-4">
+        <!-- Gym source -->
+        <select
+          id="gymSource"
+          class="p-2 rounded bg-gray-800 border border-gray-700"
+        >
+          <option value="public" selected>Public gyms</option>
+          <option value="group">Private gyms in a group</option>
+        </select>
         <!-- Handles -->
         <input
           id="handles"
@@ -84,6 +92,41 @@
         >
           🎲 Random Gym
         </button>
+      </div>
+
+      <div
+        id="groupCredentials"
+        class="hidden mb-6 rounded-lg border border-yellow-700 bg-yellow-900/30 p-4"
+      >
+        <p class="mb-3 text-sm text-yellow-200">
+          Group mode requires an account with access to the group. You are
+          fully responsible for the Codeforces group code, API key, and secret
+          you enter. They are sent only for this request and are not saved by
+          this application.
+        </p>
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <input
+            id="groupCode"
+            type="text"
+            placeholder="Codeforces group code"
+            autocomplete="off"
+            class="p-2 rounded bg-gray-800 border border-gray-700"
+          />
+          <input
+            id="apiKey"
+            type="text"
+            placeholder="Codeforces API key"
+            autocomplete="off"
+            class="p-2 rounded bg-gray-800 border border-gray-700"
+          />
+          <input
+            id="apiSecret"
+            type="password"
+            placeholder="Codeforces API secret"
+            autocomplete="off"
+            class="p-2 rounded bg-gray-800 border border-gray-700"
+          />
+        </div>
       </div>
 
       <div

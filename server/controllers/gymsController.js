@@ -1,14 +1,41 @@
-import { fetchUserSubmissions } from "../services/codeforcesAPI.js";
-import {
-  getGyms as getCachedGyms,
-  getGymById,
-  getMapCachedGyms,
-} from "../services/cacheGyms.js";
+import { fetchGyms, fetchUserSubmissions } from "../services/codeforcesAPI.js";
+import { getGyms as getCachedGyms } from "../services/cacheGyms.js";
+
+const getCredentials = (req) => {
+  const groupCode = req.get("x-cf-group-code")?.trim();
+  const apiKey = req.get("x-cf-api-key")?.trim();
+  const apiSecret = req.get("x-cf-api-secret")?.trim();
+  const provided = [groupCode, apiKey, apiSecret].filter(Boolean).length;
+
+  if (provided === 0) return null;
+  if (provided !== 3) {
+    const error = new Error(
+      "Group code, Codeforces API key, and API secret are all required."
+    );
+    error.statusCode = 400;
+    throw error;
+  }
+
+  return { groupCode, apiKey, apiSecret };
+};
+
+const getGymsForRequest = async (req) => {
+  const credentials = getCredentials(req);
+  if (credentials) {
+    return {
+      credentials,
+      gyms: await fetchGyms(credentials),
+    };
+  }
+
+  return { credentials: null, gyms: Object.values(getCachedGyms()) };
+};
+
 export const getGyms = async (req, res) => {
   try {
-    const gyms = getCachedGyms();
+    const { gyms } = await getGymsForRequest(req);
     const { difficulty } = req.query;
-    let result = Object.values(gyms);
+    let result = gyms;
     if (difficulty) {
       const minDiff = Number(difficulty);
       if (isNaN(minDiff)) {
@@ -23,7 +50,7 @@ export const getGyms = async (req, res) => {
     res.json(result);
   } catch (error) {
     console.error("Error in getGyms:", error);
-    res.status(500).json({ error: error.message });
+    res.status(error.statusCode || 500).json({ error: error.message });
   }
 };
 const solo = "practice";
@@ -31,6 +58,8 @@ export const getUserVirtualGyms = async (req, res) => {
   /// max usersubmissions maybe 8k
   try {
     let { handles, difficulty } = req.query;
+    const { credentials, gyms } = await getGymsForRequest(req);
+    const gymsById = new Map(gyms.map((gym) => [String(gym.id), gym]));
 
     if (!handles) {
       return res.status(400).json({ error: "Missing handles" });
@@ -38,12 +67,12 @@ export const getUserVirtualGyms = async (req, res) => {
     if (!Array.isArray(handles)) {
       handles = [handles];
     }
-    const submissions = await fetchUserSubmissions(handles[0]);
+    const submissions = await fetchUserSubmissions(handles[0], credentials);
     const userGyms = {};
     const solvedKeys = new Set();
     for (const sub of submissions) {
       if (sub.contestId < 100000 || sub.verdict !== "OK") continue;
-      const contest = getGymById(sub.contestId);
+      const contest = gymsById.get(String(sub.contestId));
       if (!contest || contest.phase != "FINISHED") continue;
       if (Number(difficulty) != 0)
         if (Number(contest.difficulty) !== Number(difficulty)) continue;
@@ -96,7 +125,7 @@ export const getUserVirtualGyms = async (req, res) => {
 
     res.json(userGyms);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(error.statusCode || 500).json({ error: error.message });
   }
 };
 
@@ -104,6 +133,7 @@ export const unsolvedGyms = () => {
   return async (req, res) => {
     try {
       let { handles, difficulty } = req.query;
+      const { credentials, gyms } = await getGymsForRequest(req);
 
       if (!handles) {
         return res
@@ -116,7 +146,7 @@ export const unsolvedGyms = () => {
       const userGymSolvedMap = {};
 
       for (const handle of handlesArray) {
-        const submissions = await fetchUserSubmissions(handle);
+        const submissions = await fetchUserSubmissions(handle, credentials);
 
         for (const sub of submissions) {
           if (sub.contestId < 100000 || sub.verdict !== "OK") continue;
@@ -124,9 +154,8 @@ export const unsolvedGyms = () => {
         }
       }
 
-      const gymsMap = getMapCachedGyms();
       const result = [];
-      for (const gym of gymsMap.values()) {
+      for (const gym of gyms) {
         if (gym.phase != "FINISHED") continue;
         if (Number(difficulty) != 0)
           if (gym.difficulty !== Number(difficulty)) continue;
@@ -143,7 +172,7 @@ export const unsolvedGyms = () => {
 
       res.json(result);
     } catch (err) {
-      res.status(500).json({ error: err.message });
+      res.status(err.statusCode || 500).json({ error: err.message });
     }
   };
 };
