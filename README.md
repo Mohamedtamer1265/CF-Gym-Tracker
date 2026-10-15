@@ -40,6 +40,22 @@ npm run dev
 
 🎉 The application will be running at **http://localhost:8080**
 
+## Using private group gyms
+
+Select **Private gyms in a group** in the application, then enter:
+
+- The Codeforces group code.
+- An API key and secret belonging to a Codeforces account that can read the group.
+
+These credentials are sent in request headers only for the current search. The
+application does not save them in its cache or browser storage. You are fully
+responsible for the credentials you provide. Requests are signed by the server
+before they are sent to Codeforces; the API secret is never sent to the
+Codeforces API or exposed in the page URL.
+
+If Codeforces denies access, confirm that the API account is a member of the
+group and has permission to view its gyms.
+
 
 ## 🤝 Contributing
 
@@ -79,4 +95,3 @@ git push origin feature/your-feature-name
 Go to the original repository and click "New Pull Request" to submit your changes for review.
 
 Thank you for contributing to our project! 🚀
-

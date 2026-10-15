@@ -4,12 +4,18 @@ const loading = document.getElementById("loading");
 const prevPageBtn = document.getElementById("prevPage");
 const nextPageBtn = document.getElementById("nextPage");
 const pageInfo = document.getElementById("pageInfo");
+const gymSource = document.getElementById("gymSource");
+const groupCredentials = document.getElementById("groupCredentials");
 
 let allGyms = [];
 let currentPage = 1;
 const gymsPerPage = 100;
 
-const API_BASE = "https://cf-gym-tracker.vercel.app/api/gyms";
+const API_BASE = "/api/gyms";
+
+gymSource.addEventListener("change", () => {
+  groupCredentials.classList.toggle("hidden", gymSource.value !== "group");
+});
 
 function renderGyms(gyms) {
   const tbody = document.querySelector("#gymsTable tbody");
@@ -111,6 +117,7 @@ async function fetchGyms() {
   const handlesInput = document.getElementById("handles");
   const difficultyInput = document.getElementById("difficulty");
   const modeInput = document.getElementById("mode");
+  const headers = {};
 
   const handles = handlesInput.value
     .split(",")
@@ -119,6 +126,22 @@ async function fetchGyms() {
 
   let difficulty = difficultyInput.value.trim();
   const mode = modeInput.value;
+
+  if (gymSource.value === "group") {
+    const groupCode = document.getElementById("groupCode").value.trim();
+    const apiKey = document.getElementById("apiKey").value.trim();
+    const apiSecret = document.getElementById("apiSecret").value.trim();
+
+    if (!groupCode || !apiKey || !apiSecret) {
+      return showWarning(
+        "Enter the group code, Codeforces API key, and API secret."
+      );
+    }
+
+    headers["X-CF-Group-Code"] = groupCode;
+    headers["X-CF-API-Key"] = apiKey;
+    headers["X-CF-API-Secret"] = apiSecret;
+  }
 
   if (!mode) {
     return showWarning("Please select a mode before searching.");
@@ -163,8 +186,11 @@ async function fetchGyms() {
           : `${API_BASE}${query}`;
     }
 
-    const res = await fetch(endpoint);
-    if (!res.ok) throw new Error("Bad response from server");
+    const res = await fetch(endpoint, { headers });
+    if (!res.ok) {
+      const error = await res.json().catch(() => null);
+      throw new Error(error?.error || "Bad response from server");
+    }
 
     const gymsObj = await res.json();
     allGyms = Object.values(gymsObj).reverse(); // Reverse to show newest first
@@ -173,7 +199,7 @@ async function fetchGyms() {
     showPage(currentPage);
   } catch (err) {
     console.error(err);
-    showWarning("check the handles again");
+    showWarning(err.message || "Request failed.");
   } finally {
     loading.classList.add("hidden");
   }
